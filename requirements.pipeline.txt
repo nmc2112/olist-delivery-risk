@@ -1,0 +1,8 @@
+pandas
+numpy
+sqlalchemy
+psycopg[binary]
+python-dotenv
+great_expectations
+scikit-learn
+joblib

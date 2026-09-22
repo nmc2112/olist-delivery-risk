@@ -1,0 +1,9 @@
+FROM apache/airflow:3.3.2
+
+COPY requirements.pipeline.txt /tmp/requirements.pipeline.txt
+
+RUN python -m venv /opt/airflow/project-venv \
+    && /opt/airflow/project-venv/bin/pip install --upgrade pip \
+    && /opt/airflow/project-venv/bin/pip install \
+       --no-cache-dir \
+       -r /tmp/requirements.pipeline.txt
