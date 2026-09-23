@@ -1,0 +1,24 @@
+{
+  "threshold": 0.45842878437628637,
+  "test_rows": 19294,
+  "test_positive_rate": 0.05291800559759511,
+  "average_precision": 0.05738457799933078,
+  "roc_auc": 0.46791477371734913,
+  "precision": 0.044138144649217906,
+  "recall": 0.2791380999020568,
+  "f1": 0.07622358919497192,
+  "confusion_matrix": {
+    "tn": 12101,
+    "fp": 6172,
+    "fn": 736,
+    "tp": 285
+  },
+  "best_params": {
+    "n_estimators": 200,
+    "min_samples_split": 2,
+    "min_samples_leaf": 2,
+    "max_features": "sqrt",
+    "max_depth": 30,
+    "class_weight": "balanced"
+  }
+}
