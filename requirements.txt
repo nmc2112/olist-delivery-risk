@@ -1,1 +1,5 @@
 great_expectations
+fastapi[standard]
+joblib
+pytest
+httpx
