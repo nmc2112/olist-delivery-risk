@@ -4,3 +4,4 @@ joblib
 pytest
 httpx
 streamlit
+prometheus-client

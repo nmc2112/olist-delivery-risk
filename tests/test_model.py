@@ -84,6 +84,6 @@ def test_risk_label():
     )
 
     assert result["risk"] in [
-        "low",
+        "lower",
         "high",
     ]
