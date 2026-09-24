@@ -1,0 +1,22 @@
+{
+  "model": "logistic_regression",
+  "training_strategy": "latest_20000_development_orders",
+  "threshold_selection": "maximum_f1_on_last_10000_development_orders",
+  "threshold": 0.22659019655642776,
+  "training_rows": 20000,
+  "future_rows": 19294,
+  "future_positive_rate": 0.05291800559759511,
+  "mean_prediction": 0.027656809649572026,
+  "average_precision": 0.0937905464023357,
+  "roc_auc": 0.6477701642618781,
+  "brier_score": 0.05049579887603956,
+  "precision": 0.16352201257861634,
+  "recall": 0.025465230166503428,
+  "f1": 0.04406779661016949,
+  "confusion_matrix": {
+    "tn": 18140,
+    "fp": 133,
+    "fn": 995,
+    "tp": 26
+  }
+}

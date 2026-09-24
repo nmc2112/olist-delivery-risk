@@ -1,0 +1,4 @@
+{
+  "threshold": 0.22659019655642776,
+  "selection_method": "maximum_f1_on_recent_development_validation"
+}

@@ -74,7 +74,7 @@ def build_order_item_features(
         validate="many_to_one",
     )
 
-    # Translate categories to English
+    # Translate product category names to English
     items = items.merge(
         translation,
         on="product_category_name",
@@ -97,7 +97,7 @@ def build_order_item_features(
         * items["product_width_cm"]
     )
 
-    # Aggregate to ONE ROW PER ORDER
+    # Aggregate order-item information to one row per order
     order_items = (
         items.groupby("order_id")
         .agg(
@@ -153,8 +153,8 @@ def build_order_item_features(
         .reset_index()
     )
 
-    # Use the most expensive item to represent
-    # the dominant product category / seller
+    # Representative item for categorical seller/product attributes:
+    # use the most expensive item in each order
     primary_item = (
         items.sort_values(
             "price",
@@ -168,6 +168,7 @@ def build_order_item_features(
                 "order_id",
                 "product_category_name_english",
                 "seller_state",
+                "seller_zip_code_prefix",
             ]
         ]
         .rename(
@@ -176,6 +177,8 @@ def build_order_item_features(
                     "primary_product_category",
                 "seller_state":
                     "primary_seller_state",
+                "seller_zip_code_prefix":
+                    "primary_seller_zip_code_prefix",
             }
         )
     )
@@ -215,8 +218,7 @@ def build_payment_features(payments):
         .reset_index()
     )
 
-    # Main payment = largest payment associated
-    # with the order
+    # Main payment method = payment with largest value
     primary_payment = (
         payments.sort_values(
             "payment_value",
@@ -263,7 +265,7 @@ def build_features():
     print(f"Target orders: {len(targets)}")
 
     # -------------------------
-    # Base order features
+    # Base order-level dataset
     # -------------------------
 
     features = targets[
@@ -278,7 +280,10 @@ def build_features():
         ]
     ].copy()
 
-    # Time features known at purchase time
+    # -------------------------
+    # Purchase-time features
+    # -------------------------
+
     features["purchase_month"] = (
         features[
             "order_purchase_timestamp"
@@ -297,7 +302,7 @@ def build_features():
         ].dt.hour
     )
 
-    # Approval delay
+    # Time from purchase to order approval
     features["approval_delay_hours"] = (
         (
             features["order_approved_at"]
@@ -319,7 +324,7 @@ def build_features():
     )
 
     # -------------------------
-    # Item/product/seller features
+    # Item / product / seller features
     # -------------------------
 
     item_features = build_order_item_features(
@@ -336,7 +341,7 @@ def build_features():
         validate="one_to_one",
     )
 
-    # Shipping window
+    # Time allowed before seller shipping deadline
     features["shipping_limit_days"] = (
         (
             features[
@@ -350,7 +355,7 @@ def build_features():
         / 86400
     )
 
-    # Customer vs primary seller geography
+    # Simple geographic feature
     features["customer_seller_same_state"] = (
         features["customer_state"]
         == features["primary_seller_state"]
@@ -372,7 +377,8 @@ def build_features():
     )
 
     # -------------------------
-    # Drop IDs/timestamps that are not ML features
+    # Drop identifiers / timestamps
+    # not used directly by the model
     # -------------------------
 
     features = features.drop(
@@ -386,6 +392,7 @@ def build_features():
         ]
     )
 
+    # Preserve missing category information explicitly
     features[
         "primary_product_category"
     ] = features[
@@ -397,6 +404,16 @@ def build_features():
     ] = features[
         "primary_seller_state"
     ].fillna("unknown")
+
+    features[
+        "primary_payment_type"
+    ] = features[
+        "primary_payment_type"
+    ].fillna("unknown")
+
+    # -------------------------
+    # Validation
+    # -------------------------
 
     print("\n=== FINAL FEATURE TABLE ===")
     print(f"Rows: {len(features)}")
@@ -408,6 +425,7 @@ def build_features():
     )
 
     print("\nMissing values:")
+
     missing = (
         features
         .isna()

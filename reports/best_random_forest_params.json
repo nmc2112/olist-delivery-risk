@@ -1,5 +1,5 @@
 {
-  "best_cv_average_precision": 0.184319385614221,
+  "best_cv_average_precision": 0.1886537679384855,
   "best_params": {
     "model__n_estimators": 200,
     "model__min_samples_split": 2,
